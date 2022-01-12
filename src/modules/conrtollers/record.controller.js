@@ -60,7 +60,7 @@ module.exports.addNewRecord = (req, res) => {
 
 module.exports.removeRecord = (req, res) => {
   const { authorization } = req.headers;
-  jwt.verify(authorization, process.env.JWT_KEY, (err) => {
+  jwt.verify(authorization, process.env.JWT_KEY, (err, data) => {
     if (err) return res.status(401).send("Error, corrupted token!!!");
     const id = req.body._id;
     Record.deleteOne({ _id: id })
