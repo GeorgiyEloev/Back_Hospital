@@ -66,7 +66,8 @@ module.exports.removeRecord = (req, res) => {
     Record.deleteOne({ _id: id })
       .then((result) => {
         if (result.deletedCount) {
-          Record.find().then((result) => {
+          const userId = data._id;
+          Record.find({ userId }).then((result) => {
             res.send({ data: result });
           });
         } else {
