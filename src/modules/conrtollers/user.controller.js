@@ -47,15 +47,16 @@ module.exports.addNewUser = (req, res) => {
 };
 
 module.exports.authorizationUser = (req, res) => {
-  User.findOne({ login: req.body.login })
+  const { login, password } = req.body;
+  User.findOne({ login: login })
     .then((result) => {
       if (result) {
         const hash = crypto
           .createHash(HASH_ALGOR)
-          .update(req.body.password)
+          .update(password)
           .digest(HASH_BASE);
         if (hash === result.password) {
-          const { _id, login } = result;
+          const { _id} = result;
           const userNotPassword = {
             _id,
             login,
