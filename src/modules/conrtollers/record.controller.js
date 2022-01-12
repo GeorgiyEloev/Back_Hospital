@@ -1,4 +1,3 @@
-
 const jwt = require("jsonwebtoken");
 const Record = require("../../db/models/reception/recordSchema");
 
@@ -79,4 +78,3 @@ module.exports.removeRecord = (req, res) => {
       });
   });
 };
-

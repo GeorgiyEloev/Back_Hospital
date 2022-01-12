@@ -11,5 +11,4 @@ router.get("/allRecord", getAllRecord);
 router.post("/addNewRecord", addNewRecord);
 router.delete("/removeRecord", removeRecord);
 
-
 module.exports = router;
