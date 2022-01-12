@@ -4,8 +4,6 @@ const User = require("../../db/models/user/userSchema");
 const tokenService = require("../service/token-service");
 
 const { HASH_ALGOR, HASH_BASE } = process.env;
-console.log(HASH_ALGOR)
-console.log(HASH_BASE)
 
 module.exports.addNewUser = (req, res) => {
   User.findOne({ login: req.body.login })
@@ -56,7 +54,6 @@ module.exports.authorizationUser = (req, res) => {
           .createHash(HASH_ALGOR)
           .update(req.body.password)
           .digest(HASH_BASE);
-        console.log(hash);
         if (hash === result.password) {
           const { _id, login } = result;
           const userNotPassword = {
@@ -73,7 +70,6 @@ module.exports.authorizationUser = (req, res) => {
       }
     })
     .catch((err) => {
-      console.error(err);
       res.status(419).send("Error. An error occurred during the search!!!");
     });
 };
