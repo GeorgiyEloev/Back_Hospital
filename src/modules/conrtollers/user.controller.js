@@ -2,7 +2,7 @@ const crypto = require("crypto");
 const User = require("../../db/models/user/userSchema");
 const tokenService = require("../service/token-service");
 
-module.exports.addNewUser = (req, res, next) => {
+module.exports.addNewUser = (req, res) => {
   User.findOne({ login: req.body.login })
     .then((result) => {
       if (!result) {
@@ -27,7 +27,7 @@ module.exports.addNewUser = (req, res, next) => {
                 login,
               };
               const token = tokenService.generateToken({ ...userNotPassword });
-              res.send({ data: { login }, token });
+              res.send({ data: { login, token } });
             })
             .catch((err) => {
               res.status(421).send("Error, user doesn't save!!!");
@@ -36,10 +36,16 @@ module.exports.addNewUser = (req, res, next) => {
           res.status(422).send("Error, incorrect data!!!");
         }
       } else {
-        res.status(420).send("Error, login is busy!!!");
+        res.status(404).send("Error, login is busy!!!");
       }
     })
     .catch((err) => {
       res.status(419).send("Error. An error occurred during the search!!!");
     });
+};
+
+module.exports.authorizationUser = (req, res) => {
+	User.findOne({ login: req.body.login }).then((result) => {}).catch((err) => {
+		res.status(419).send("Error. An error occurred during the search!!!");
+	})
 };
