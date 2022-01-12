@@ -1,6 +1,11 @@
 const crypto = require("crypto");
+require("dotenv").config();
 const User = require("../../db/models/user/userSchema");
 const tokenService = require("../service/token-service");
+
+const { HASH_ALGOR, HASH_BASE } = process.env;
+console.log(HASH_ALGOR)
+console.log(HASH_BASE)
 
 module.exports.addNewUser = (req, res) => {
   User.findOne({ login: req.body.login })
@@ -13,7 +18,6 @@ module.exports.addNewUser = (req, res) => {
           req.body.login.trim()
         ) {
           const user = new User(req.body);
-          const { HASH_ALGOR, HASH_BASE } = process.env;
           user.password = crypto
             .createHash(HASH_ALGOR)
             .update(user.password)
@@ -45,7 +49,31 @@ module.exports.addNewUser = (req, res) => {
 };
 
 module.exports.authorizationUser = (req, res) => {
-	User.findOne({ login: req.body.login }).then((result) => {}).catch((err) => {
-		res.status(419).send("Error. An error occurred during the search!!!");
-	})
+  User.findOne({ login: req.body.login })
+    .then((result) => {
+      if (result) {
+        const hash = crypto
+          .createHash(HASH_ALGOR)
+          .update(req.body.password)
+          .digest(HASH_BASE);
+        console.log(hash);
+        if (hash === result.password) {
+          const { _id, login } = result;
+          const userNotPassword = {
+            _id,
+            login,
+          };
+          const token = tokenService.generateToken({ ...userNotPassword });
+          res.send({ data: { login, token } });
+        } else {
+          res.status(401).send("Error, invalid password!!!");
+        }
+      } else {
+        res.status(404).send("Error, the login does not exist!!!");
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(419).send("Error. An error occurred during the search!!!");
+    });
 };
