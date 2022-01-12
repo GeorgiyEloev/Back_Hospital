@@ -1,7 +1,8 @@
 const Record = require("../../db/models/reception/recordSchema");
 
 module.exports.getAllRecord = (req, res) => {
-  Record.find()
+	const {userId} =req.body
+  Record.find({userId})
     .then((result) => {
       res.send({ data: result });
     })
