@@ -13,7 +13,7 @@ app.use(cors());
 mongoose.connect(UTL_BD);
 
 app.use(express.json());
-app.use("/reception/", apiReceptionRoutes);
+app.use("/record/", apiReceptionRoutes);
 app.use("/user/", apiUserRoutes);
 
 app.listen(PORT, () => {
