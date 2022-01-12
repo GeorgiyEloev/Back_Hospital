@@ -48,7 +48,7 @@ module.exports.addNewUser = (req, res) => {
 
 module.exports.authorizationUser = (req, res) => {
   const { login, password } = req.body;
-  User.findOne({ login: login })
+  User.findOne({ login })
     .then((result) => {
       if (result) {
         const hash = crypto
@@ -56,7 +56,7 @@ module.exports.authorizationUser = (req, res) => {
           .update(password)
           .digest(HASH_BASE);
         if (hash === result.password) {
-          const { _id} = result;
+          const { _id } = result;
           const userNotPassword = {
             _id,
             login,
