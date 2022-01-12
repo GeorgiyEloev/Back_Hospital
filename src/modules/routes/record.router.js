@@ -1,8 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { getAllRecord
-} = require("../conrtollers/record.controller");
+const { getAllRecord } = require("../conrtollers/record.controller");
 
 router.get("/allRecord", getAllRecord);
 
