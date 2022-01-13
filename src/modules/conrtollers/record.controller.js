@@ -95,21 +95,12 @@ module.exports.changeRecord = (req, res) => {
     const recordUpdate = {};
 
     if (body.hasOwnProperty("_id") && body._id.trim()) {
-      recordUpdate._id = body._id.trim();
-      recordUpdate.userId = data._id;
-      if (body.hasOwnProperty("patient") && body.patient.trim()) {
-        recordUpdate.patient = body.patient.trim();
+      const id = body._id.trim();
+      delete body._id;
+      for (let key in body) {
+        checkUpdate(key, body, recordUpdate);
       }
-      if (body.hasOwnProperty("doctor") && body.doctor.trim()) {
-        recordUpdate.doctor = body.doctor.trim();
-      }
-      if (body.hasOwnProperty("date") && body.date.trim()) {
-        recordUpdate.date = body.date.trim();
-      }
-      if (body.hasOwnProperty("symptoms") && body.symptoms.trim()) {
-        recordUpdate.symptoms = body.symptoms.trim();
-      }
-      Record.updateOne({ _id: recordUpdate._id }, recordUpdate)
+      Record.updateOne({ _id: id }, recordUpdate)
         .then((result) => {
           const userId = data._id;
           Record.find({ userId })
@@ -129,4 +120,10 @@ module.exports.changeRecord = (req, res) => {
       res.status(422).send("Error! Invalid ID!!!!");
     }
   });
+};
+
+const checkUpdate = (key, obj1, obj2) => {
+  if (obj1.hasOwnProperty(`${key}`) && obj1[key].trim()) {
+    obj2[key] = obj1[key].trim();
+  }
 };
