@@ -79,3 +79,18 @@ module.exports.removeRecord = (req, res) => {
       });
   });
 };
+
+module.exports.changeRecord = (req, res) => {
+  const { authorization } = req.headers;
+  jwt.verify(authorization, process.env.JWT_KEY, (err, data) => {
+    if (err) return res.status(401).send("Error, corrupted token!!!");
+
+    const body = req.body;
+    const recordUpdate = {};
+
+    if (body.hasOwnProperty("_id") && body._id.trim()) {
+    } else {
+      res.status(422).send("Error! Invalid ID!!!!");
+    }
+  });
+};
