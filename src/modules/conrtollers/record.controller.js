@@ -67,9 +67,15 @@ module.exports.removeRecord = (req, res) => {
       .then((result) => {
         if (result.deletedCount) {
           const userId = data._id;
-          Record.find({ userId }).then((result) => {
-            res.send({ data: result });
-          });
+          Record.find({ userId })
+            .then((result) => {
+              res.send({ data: result });
+            })
+            .catch((err) => {
+              res
+                .status(419)
+                .send("Error. An error occurred during the search!!!");
+            });
         } else {
           res.status(404).send("Error, record does not exist!!!");
         }
@@ -89,6 +95,36 @@ module.exports.changeRecord = (req, res) => {
     const recordUpdate = {};
 
     if (body.hasOwnProperty("_id") && body._id.trim()) {
+      recordUpdate._id = body._id.trim();
+      recordUpdate.userId = data._id;
+      if (body.hasOwnProperty("patient") && body.patient.trim()) {
+        recordUpdate.patient = body.patient.trim();
+      }
+      if (body.hasOwnProperty("doctor") && body.doctor.trim()) {
+        recordUpdate.doctor = body.doctor.trim();
+      }
+      if (body.hasOwnProperty("date") && body.date.trim()) {
+        recordUpdate.date = body.date.trim();
+      }
+      if (body.hasOwnProperty("symptoms") && body.symptoms.trim()) {
+        recordUpdate.symptoms = body.symptoms.trim();
+      }
+      Record.updateOne({ _id: recordUpdate._id }, recordUpdate)
+        .then((result) => {
+          const userId = data._id;
+          Record.find({ userId })
+            .then((result) => {
+              res.send({ data: result });
+            })
+            .catch((err) => {
+              res
+                .status(419)
+                .send("Error. An error occurred during the search!!!");
+            })
+        })
+        .catch((err) => {
+          res.status(419).send("Error. An error occurred during the update!!!");
+        });
     } else {
       res.status(422).send("Error! Invalid ID!!!!");
     }
