@@ -120,7 +120,7 @@ module.exports.changeRecord = (req, res) => {
               res
                 .status(419)
                 .send("Error. An error occurred during the search!!!");
-            })
+            });
         })
         .catch((err) => {
           res.status(419).send("Error. An error occurred during the update!!!");
