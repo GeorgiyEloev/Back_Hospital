@@ -57,3 +57,25 @@ module.exports.addNewRecord = (req, res) => {
     }
   });
 };
+
+module.exports.removeRecord = (req, res) => {
+  const { authorization } = req.headers;
+  jwt.verify(authorization, process.env.JWT_KEY, (err, data) => {
+    if (err) return res.status(401).send("Error, corrupted token!!!");
+    const id = req.body._id;
+    Record.deleteOne({ _id: id })
+      .then((result) => {
+        if (result.deletedCount) {
+          const userId = data._id;
+          Record.find({ userId }).then((result) => {
+            res.send({ data: result });
+          });
+        } else {
+          res.status(404).send("Error, record does not exist!!!");
+        }
+      })
+      .catch((err) => {
+        res.status(419).send("Error. An error occurred during the delete!!!");
+      });
+  });
+};
