@@ -17,7 +17,7 @@ module.exports.getAllRecord = (req, res) => {
 
 module.exports.addNewRecord = (req, res) => {
   const { authorization } = req.headers;
-  const { patient, doctor, symptoms } = req.body;
+  const { patient, doctor, date, symptoms } = req.body;
   jwt.verify(authorization, process.env.JWT_KEY, (err, data) => {
     if (err) return res.status(401).send("Error, corrupted token!!!");
     if (
@@ -28,10 +28,15 @@ module.exports.addNewRecord = (req, res) => {
       req.body.hasOwnProperty("symptoms") &&
       req.body.symptoms.trim()
     ) {
+      let dateNew;
+      new Date(date).toString() === "Invalid Date"
+        ? (dateNew = date)
+        : (dateNew = new Date());
       const recordNew = {
         userId: data._id,
         patient,
         doctor,
+        date: dateNew,
         symptoms,
       };
       const record = new Record(recordNew);
