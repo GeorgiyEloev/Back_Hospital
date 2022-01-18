@@ -6,7 +6,7 @@ const recordSchema = new Schema({
   userId: String,
   patient: String,
   doctor: String,
-  date: { type: Date, default: Date.now },
+  date: { type: Date },
   symptoms: String,
 });
 
