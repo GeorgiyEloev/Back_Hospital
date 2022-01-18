@@ -32,8 +32,6 @@ module.exports.addNewRecord = (req, res) => {
       new Date(date).toString() === "Invalid Date"
         ? (dateNew = date)
         : (dateNew = new Date());
-      console.log(new Date(date).toString() === "Invalid Date");
-      console.log(dateNew);
       const recordNew = {
         userId: data._id,
         patient,
