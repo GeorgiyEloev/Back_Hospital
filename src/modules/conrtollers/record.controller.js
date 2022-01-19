@@ -30,8 +30,8 @@ module.exports.addNewRecord = (req, res) => {
     ) {
       let dateNew;
       new Date(date).toString() === "Invalid Date"
-        ? (dateNew = date)
-        : (dateNew = new Date());
+        ? (dateNew = new Date())
+        : (dateNew = date);
       const recordNew = {
         userId: data._id,
         patient,
