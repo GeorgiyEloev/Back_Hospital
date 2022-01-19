@@ -29,7 +29,6 @@ module.exports.addNewRecord = (req, res) => {
       req.body.symptoms.trim()
     ) {
       let dateNew;
-			console.log(new Date(date).toString() === "Invalid Date");
       new Date(date).toString() === "Invalid Date"
         ? (dateNew = new Date())
         : (dateNew = date);
