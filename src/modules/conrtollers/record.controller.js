@@ -5,7 +5,14 @@ module.exports.getAllRecord = (req, res) => {
   const { authorization } = req.headers;
   jwt.verify(authorization, process.env.JWT_KEY, (err, data) => {
     if (err) return res.status(401).send("Error, corrupted token!!!");
-    Record.find({ userId: data._id }, { userId: 0 })
+    const userId = data._id;
+    Record.find({ userId }, [
+      "_id",
+      "patient",
+      "doctor",
+      "date",
+      "symptoms",
+    ])
       .then((result) => {
         res.send({ data: result });
       })
@@ -44,7 +51,13 @@ module.exports.addNewRecord = (req, res) => {
         .save()
         .then((result) => {
           const { userId } = result;
-          Record.find({ userId }, { userId: 0 })
+          Record.find({ userId }, [
+            "_id",
+            "patient",
+            "doctor",
+            "date",
+            "symptoms",
+          ])
             .then((result) => {
               res.send({ data: result });
             })
@@ -72,7 +85,13 @@ module.exports.removeRecord = (req, res) => {
       .then((result) => {
         if (result.deletedCount) {
           const userId = data._id;
-          Record.find({ userId }, { userId: 0 })
+          Record.find({ userId }, [
+            "_id",
+            "patient",
+            "doctor",
+            "date",
+            "symptoms",
+          ])
             .then((result) => {
               res.send({ data: result });
             })
@@ -108,7 +127,13 @@ module.exports.changeRecord = (req, res) => {
       Record.updateOne({ _id: id }, recordUpdate)
         .then((result) => {
           const userId = data._id;
-          Record.find({ userId }, { userId: 0 })
+          Record.find({ userId }, [
+            "_id",
+            "patient",
+            "doctor",
+            "date",
+            "symptoms",
+          ])
             .then((result) => {
               res.send({ data: result });
             })
