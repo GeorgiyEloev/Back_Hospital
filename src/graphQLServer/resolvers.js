@@ -69,21 +69,21 @@ const resolvers = {
         });
     });
   },
-  // removeRecord: ({ _id, token }) => {
-  //   return jwt.verify(token, process.env.JWT_KEY, (err, data) => {
-  //     const userId = data._id;
-  //     return Record.findByIdAndRemove(_id).then((result) => {
-  //       console.log(result);
-  //       return Record.find({ userId }, [
-  //         "_id",
-  //         "patient",
-  //         "doctor",
-  //         "date",
-  //         "symptoms",
-  //       ]);
-  //     });
-  //   });
-  // },
+  removeRecord: ({ _id, token }) => {
+    return jwt.verify(token, process.env.JWT_KEY, (err, data) => {
+      const userId = data._id;
+      return Record.findByIdAndRemove(_id).then((result) => {
+        console.log(result);
+        return Record.find({ userId }, [
+          "_id",
+          "patient",
+          "doctor",
+          "date",
+          "symptoms",
+        ]);
+      });
+    });
+  },
 };
 
 module.exports = resolvers;
