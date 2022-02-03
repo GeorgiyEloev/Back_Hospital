@@ -6,13 +6,7 @@ module.exports.getAllRecord = (req, res) => {
   jwt.verify(authorization, process.env.JWT_KEY, (err, data) => {
     if (err) return res.status(401).send("Error, corrupted token!!!");
     const userId = data._id;
-    Record.find({ userId }, [
-      "_id",
-      "patient",
-      "doctor",
-      "date",
-      "symptoms",
-    ])
+    Record.find({ userId }, ["_id", "patient", "doctor", "date", "symptoms"])
       .then((result) => {
         res.send({ data: result });
       })
@@ -36,9 +30,11 @@ module.exports.addNewRecord = (req, res) => {
       req.body.symptoms.trim()
     ) {
       let dateNew;
-      new Date(date).toString() === "Invalid Date"
-        ? (dateNew = new Date())
-        : (dateNew = date);
+      new Date(date).toString() !== "Invalid Date" &&
+      new Date(date) >= new Date("01-01-2021") &&
+      new Date(date) <= new Date("12-31-2022")
+        ? (dateNew = date)
+        : (dateNew = new Date());
       const recordNew = {
         userId: data._id,
         patient,
@@ -119,12 +115,16 @@ module.exports.changeRecord = (req, res) => {
     const recordUpdate = {};
 
     if (body.hasOwnProperty("_id") && body._id.trim()) {
-      const id = body._id.trim();
-      delete body._id;
-      for (let key in body) {
-        checkUpdate(key, body, recordUpdate);
+      new Date(body.date).toString() !== "Invalid Date" &&
+      new Date(body.date) >= new Date("01-01-2021") &&
+      new Date(body.date) <= new Date("12-31-2022")
+        ? (recordUpdate.date = body.date)
+        : body;
+      const checkKeys = ["patient", "doctor", "symptoms"];
+      for (let i in checkKeys) {
+        checkUpdate(checkKeys[i], body, recordUpdate);
       }
-      Record.updateOne({ _id: id }, recordUpdate)
+      Record.updateOne({ _id: body._id }, recordUpdate)
         .then((result) => {
           const userId = data._id;
           Record.find({ userId }, [

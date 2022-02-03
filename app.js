@@ -17,5 +17,5 @@ app.use("/record/", apiReceptionRoutes);
 app.use("/user/", apiUserRoutes);
 
 app.listen(PORT, () => {
-  console.log("listening on port 8000!");
+  console.log(`listening on port ${PORT}!`);
 });
