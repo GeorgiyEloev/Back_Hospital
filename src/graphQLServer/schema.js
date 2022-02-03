@@ -1,34 +1,8 @@
-const { buildSchema } = require("graphql");
+const { buildSchema, print } = require("graphql");
+const { mergeTypeDefs } = require("@graphql-tools/merge");
+const schemaUsers = require("./SchemaСomponents/schemaUsers");
+const schemaRecords = require("./SchemaСomponents/schemaRecords");
 
-const schema = buildSchema(`
-  type User {
-    _id: ID
-    login: String
-    password: String
-  }
-  type Record {
-    _id: ID
-    userId: ID
-    patient: String
-    doctor: String
-    date: String
-    symptoms: String
-  }
+const schema = [schemaUsers, schemaRecords];
 
-  input RecordInput {
-    patient: String!
-    doctor: String!
-    date: String!
-    symptoms: String!
-  }
-
-  type Query {
-    getAllRecords(token: String!): [Record]
-  }  
-  type Mutation {
-    addNewRecord(input: RecordInput!, token: String!): [Record]
-    removeRecord(_id: ID!, token: String!): [Record]
-  }
-`);
-
-module.exports = schema;
+module.exports = buildSchema(print(mergeTypeDefs(schema)));

@@ -118,14 +118,13 @@ module.exports.changeRecord = (req, res) => {
       new Date(body.date).toString() !== "Invalid Date" &&
       new Date(body.date) >= new Date("01-01-2021") &&
       new Date(body.date) <= new Date("12-31-2022")
-        ? (body.date = body.date)
-        : (body.date = new Date());
-      const newDate = body.date;
+        ? (recordUpdate.date = body.date)
+        : body;
       const checkKeys = ["patient", "doctor", "symptoms"];
-      for (let item in checkKeys) {
-        checkUpdate(checkKeys[item], body, recordUpdate);
+      for (let i in checkKeys) {
+        checkUpdate(checkKeys[i], body, recordUpdate);
       }
-      Record.updateOne({ _id: body._id }, { date: newDate, ...recordUpdate })
+      Record.updateOne({ _id: body._id }, recordUpdate)
         .then((result) => {
           const userId = data._id;
           Record.find({ userId }, [
